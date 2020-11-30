@@ -1,0 +1,51 @@
+
+{% extends "base.jinja" %}
+
+
+{% block content %}
+
+  <div class='main-content jumbotron'>
+
+          <h1>DynaTMT - v0.1</h1>
+          <span>This tool analyzes mePROD-TMT data. It takes Proteome Discover output files as default input. However, it´s possible to input plain text files containing an identifier column and abundance values.</span>
+
+  </div>
+
+  {% for foo in foos %}
+    <a href="{{foo.link}}">{{foo.name}}</a>
+  {% endfor %}
+
+
+  <form id="inputParams">
+
+    <ul>
+      <li>
+        <span>
+          <label for="cars">Choose a Input:</label>
+          <select name="input" id="input">
+            <option value="PD">PD</option>
+            <option value="MQ">plain text</option>
+          </select>
+        </span>
+      </li>
+
+      <li>
+        <input type="file" id='input_file' name='input_file'>
+      </li>
+
+      <li>
+        <label for='Normalisation'>Please choose your normalization method:</label>
+        <select name="norm" id="norm">
+          <option value="TI">Total intensity</option>
+          <option value="MD">Median</option>
+          <option value="TMM">TMM</option>
+        </select>
+      </li>
+
+      <li>
+        <a class="button" id='go-button'>GO</a>
+      </li>
+    </ul>
+
+  </form>
+{% endblock %}
