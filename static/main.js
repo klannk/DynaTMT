@@ -7,9 +7,6 @@ const gobutt = document.getElementById("go-button")
 const resbutt = document.getElementById("result")
 resbutt.disabled=true;
 
-const showresults = () => {
-  console.log('RESULT')
-}
 
 
 
@@ -29,24 +26,27 @@ const onClickButton = () => {
     $.ajax({url:pythonscript,dataType: "json",contentType: 'application/json;charset=UTF-8', type:'POST',data:dataasjson, success: function(data) {
         if (data) {
           console.log("Returned:",data)}
-        
-     }})
-    var formData = new FormData();
-    formData.append('file', $('input[type=file]')[0].files[0]);
-     $.ajax({
-      type: 'POST',
-      url: '/api/process',
-      data: formData,
-      contentType: false,
-      cache: false,
-      processData: false,
-      success: function(data) {
-          console.log(data);
-          resbutt.disabled=false;
+          var formData = new FormData();
+          formData.append('file', $('input[type=file]')[0].files[0]);
+          $.ajax({
+            type: 'POST',
+            url: '/api/process',
+            data: formData,
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function(data) {
+                
+                resbutt.disabled=false;
+                window.result_data = data;
+                
       }
       })  
+     }})
+    
    
   }
 
-gobutt.addEventListener("click",onClickButton)
 
+
+gobutt.addEventListener("click",onClickButton)

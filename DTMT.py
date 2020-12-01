@@ -43,7 +43,7 @@ def processor():
     print("Input Type:",session['itype'])
     print("Normalization Method:",session['normal_method'])
     if session['itype'] == "PD":
-            
+        print('STARTING PD PROCESSING')
         process_PD.IT_adjustment()
         if session['normal_method'] == 'TI':
             print('Total intensity normalisation')
@@ -62,11 +62,16 @@ def processor():
         baselined=process_PD.baseline_correction()
         timestr=time.strftime("%Y%m%d-%H%M%S")
         baselined.to_csv("./Results/"+timestr+".txt",sep='\t')
+        baselined.to_json("./Temp/Result.json")
         return(baselined.to_json())
     elif session['itype'] == "MQ":
         
-        
-        process_MQ.IT_adjustment()
+        print('STARTING PLAIN TEXT PROCESSING')
+        if  session['it_adjustment'] == True:
+            process_MQ.IT_adjustment()
+        else:
+            pass
+
         if session['normal_method'] == 'TI':
             print('Total intensity normalisation')
             process_MQ.total_intensity_normalisation()
@@ -83,13 +88,22 @@ def processor():
         baselined=process_MQ.baseline_correction()
         timestr=time.strftime("%Y%m%d-%H%M%S")
         baselined.to_csv("./Results/"+timestr+".txt",sep='\t')
+        baselined.to_json("./Temp/Result.json")
         return(baselined.to_json())
 
     else:
         print('Input Type Error')
         return('Input Type Error')
 
+@app.route("/api/results", methods=["GET"])
+def results_index():
 
+    return render_template('Results.jinja')
+
+@app.route("/api/get_latest",methods=["GET"])
+def get_latest_result():
+    data = pd.read_json("./Temp/Result.json")
+    return(data.to_json())
 # @app.route("/runs/", methods=["GET", "POST"])
 # def runs():
 #   # Returns a list of all runs to select from
