@@ -4,41 +4,62 @@
 {% block content %}
 
   <ul>
-    
-      <span>
-        <div class="col-md-5 mb-3">
-          <label for="input">Choose a input type:</label>
-          <select name="input" id="input">
-            <option value="PD">PD</option>
-            <option value="MQ">Plain text</option>
-          </select>
+      <div class="container">
+        <div class="row">
+        
+          <div class="col-md-4">
+            <h2>Input Type</h2>
+            <label for="input"><b>Choose a input type:</b></label>
+            <select name="input" id="input">
+              <option value="PD">PD</option>
+              <option value="MQ">Plain text</option>
+            </select>
+          </div>
+        
+      
+          <div class="col-md-4">
+            <h2>Input File</h2>
+            <input type="file" id='input_file' name='input_file'>
+          </div>
+      </div>
+      <hr>
+        <div class="row">
+          <div class="col-md-4">
+            <h2>Normalization</h2>
+            <label for='Normalisation'><b>Please choose your normalization method:</b></label>
+            <select name="Normalisation" id="norm">
+              <option value="TI">Total intensity</option>
+              <option value="MD">Median</option>
+              <option value="TMM">TMM</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <h2>Ion injection time</h2>
+            <label for='it_adj'><b>Do you want to perform Injection Time adjustment?</b></label>
+            <select name="it_adj" id="it_adj">
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+        
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-md-4">
+          <h2>Baseline</h2>
+          <label for="baseline"><b>Please select index of baseline</b></label>
+          <input type="text" id="baseline" name ="baseline">
+          <br>
+          <span style="color:grey">
+            Please note, that the first column has the index of 0.
+          </span>
         </div>
-      </span>
-    
-    
-      <input type="file" id='input_file' name='input_file'>
-    
-    
-      <div class="col-md-5 mb-3">
-        <label for='Normalisation'>Please choose your normalization method:</label>
-        <select name="Normalisation" id="norm">
-          <option value="TI">Total intensity</option>
-          <option value="MD">Median</option>
-          <option value="TMM">TMM</option>
-        </select>
       </div>
-      <div class="col-md-5 mb-3">
-        <label for='it_adj'>Do you want to perform Injection Time adjustment?</label>
-        <select name="it_adj" id="it_adj">
-          <option value="Yes">Yes</option>
-          <option value="No">No</option>
-        </select>
-      </div>
-    
     
     
   </ul>
-
-  <button class="btn btn-primary btn-lg btn-block" id='go-button'>GO</button>
-  <a href="/api/results"><button class="btn btn-primary btn-lg btn-block" id='result',>Show Result</button></a>
+  <div class="container">
+    <button class="btn btn-primary btn-lg btn-block" id='go-button'>GO</button>
+    <a href="/api/results"><button class="btn-lg btn-block" id='result',>Show Result</button></a>
+  </div>
 {% endblock %}

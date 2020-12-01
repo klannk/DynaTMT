@@ -17,8 +17,8 @@ const onClickButton = () => {
     
     const inorm = document.getElementById("norm")
     const iit = document.getElementById("it_adj")
-
-    let formdata = {input_type:itype.value, normal_method:inorm.value, it_adj:iit.value}
+    const baselineindex = document.getElementById("baseline")
+    let formdata = {input_type:itype.value, normal_method:inorm.value, it_adj:iit.value,base_index:baselineindex.value}
     dataasjson=JSON.stringify(formdata)
     alert('Running script')
 
@@ -38,7 +38,7 @@ const onClickButton = () => {
             success: function(data) {
                 
                 resbutt.disabled=false;
-                window.result_data = data;
+                
                 
       }
       })  

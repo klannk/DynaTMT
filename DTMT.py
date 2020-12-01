@@ -10,11 +10,16 @@ app = Flask(__name__)
 # CORS(app)
 app.secret_key = '123'
 
+
+
 @app.route("/", methods=["GET"])
 def index():
   # return redirect("/static/index.html", code=302)
     return render_template('params.jinja')
 
+@app.route("/help")
+def documentation():
+    return render_template('documentation.jinja')
 
 
 @app.route("/api/params", methods=["POST"])
@@ -26,7 +31,7 @@ def http_resp():
         session['it_adjustment']=True
     else:
         session['it_adjustment']=False
-    
+    session['baseline_index']=int(data['base_index'])
     return{'sucess':'yes'}
     
   
@@ -59,7 +64,7 @@ def processor():
             print('No Normalization performed')
             
         process_PD.extract_heavy()
-        baselined=process_PD.baseline_correction()
+        baselined=process_PD.baseline_correction(i_baseline=session['baseline_index'])
         timestr=time.strftime("%Y%m%d-%H%M%S")
         baselined.to_csv("./Results/"+timestr+".txt",sep='\t')
         baselined.to_json("./Temp/Result.json")
@@ -85,7 +90,7 @@ def processor():
         else:
             print('No Normalization performed')
         process_MQ.extract_heavy()
-        baselined=process_MQ.baseline_correction()
+        baselined=process_MQ.baseline_correction(i_baseline=session['baseline_index'])
         timestr=time.strftime("%Y%m%d-%H%M%S")
         baselined.to_csv("./Results/"+timestr+".txt",sep='\t')
         baselined.to_json("./Temp/Result.json")
@@ -110,7 +115,6 @@ def get_latest_result():
 #   pass
 
 
-
 if __name__  == '__main__':
     
-    app.run(debug=True)
+    app.run()
