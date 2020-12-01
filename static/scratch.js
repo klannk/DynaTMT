@@ -19,7 +19,9 @@ const onClickButton = () => {
     const itype = document.getElementById("input")
     
     const inorm = document.getElementById("norm")
-    let formdata = {input_type:itype.value, normal_method:inorm.value}
+    const iit = document.getElementById("it_adj")
+
+    let formdata = {input_type:itype.value, normal_method:inorm.value, it_adj:iit.value}
     dataasjson=JSON.stringify(formdata)
     alert('Running script')
 
@@ -48,4 +50,3 @@ const onClickButton = () => {
 
 gobutt.addEventListener("click",onClickButton)
 
-resbutt.addEventListener("click",showresults)
