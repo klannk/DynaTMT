@@ -10,8 +10,8 @@
           <div class="col-md-4">
             <h2>Input Type</h2>
             <label for="input"><b>Choose a input type:</b></label>
-            <select name="input" id="input">
-              <option value="PD">PD</option>
+            <select name="input" id="input" class="custom-select d-block w-100">
+              <option value="PD">Proteome Discoverer</option>
               <option value="MQ">Plain text</option>
             </select>
           </div>
@@ -27,7 +27,7 @@
           <div class="col-md-4">
             <h2>Normalization</h2>
             <label for='Normalisation'><b>Please choose your normalization method:</b></label>
-            <select name="Normalisation" id="norm">
+            <select name="Normalisation" id="norm" class="custom-select d-block w-100">
               <option value="TI">Total intensity</option>
               <option value="MD">Median</option>
               <option value="TMM">TMM</option>
@@ -36,7 +36,7 @@
           <div class="col-md-4">
             <h2>Ion injection time</h2>
             <label for='it_adj'><b>Do you want to perform Injection Time adjustment?</b></label>
-            <select name="it_adj" id="it_adj">
+            <select name="it_adj" id="it_adj" class="custom-select d-block w-100">
               <option value="Yes">Yes</option>
               <option value="No">No</option>
             </select>
@@ -48,7 +48,7 @@
         <div class="col-md-4">
           <h2>Baseline</h2>
           <label for="baseline"><b>Please select index of baseline</b></label>
-          <input type="text" id="baseline" name ="baseline">
+          <input class ="form-control mr-sm-2" type="text" id="baseline" name ="baseline">
           <br>
           <span style="color:grey">
             Please note, that the first column has the index of 0.

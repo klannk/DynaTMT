@@ -31,7 +31,11 @@ def http_resp():
         session['it_adjustment']=True
     else:
         session['it_adjustment']=False
-    session['baseline_index']=int(data['base_index'])
+    try:
+        session['baseline_index']=int(data['base_index'])
+    except ValueError:
+        session['baseline_index']=0
+        print("DEFAULTED BASELINE")
     return{'sucess':'yes'}
     
   

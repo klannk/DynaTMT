@@ -2,9 +2,6 @@ from scipy import stats
 from scipy.stats import trim_mean
 import pandas as pd
 import numpy as np
-import statsmodels.api as smf
-import sklearn.preprocessing as skl
-import matplotlib.pyplot as plt
 
 
 '''PREPROCESSING: Heavy AND Light peptides are used for summed intensity normalisation'''
@@ -129,8 +126,8 @@ class PD_input:
     def sum_peptides_for_proteins(self):
         input = self.input_file
         print('Calculate Protein quantifications from PSM')
-        channels = [col for col in PSM.columns if 'Abundance:' in col]
-        MPA=list([col for col in PSM.columns if 'Master Protein Accession' in col])
+        channels = [col for col in input.columns if 'Abundance:' in col]
+        MPA=list([col for col in input.columns if 'Master Protein Accession' in col])
         MPA=MPA[0]
         PSM_grouped=PSM.groupby(by=[MPA])
         result={}
