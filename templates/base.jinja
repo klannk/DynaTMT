@@ -25,10 +25,13 @@
       <div id="navbar" class="collapse navbar-collapse">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item">
-            <a class="nav-link" href="/">Home</a>
+            <a class="nav-link" href="/">mePROD</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/help">Documentation</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/TPP">pSILAC</a>
           </li>
         </ul>
       </div>
@@ -36,10 +39,14 @@
     <div class='jumbotron'>
       <div class="container">
         <h1 class="display-3">DynaTMT - v0.3</h1>
-        <p align="justify" class="lead">This tool analyzes mePROD-TMT data. 
-          For more information please refer to the original publication of the <a href="https://doi.org/10.1016/j.molcel.2019.11.010">mePROD method</a>
-          . This tool processes Peptide or PSM data to extract SILAC labeled peptide quantification, correct them for
-          isolation interference and calculates protein level quantifications.
+        <p align="justify" class="lead">This tool analyzes (p)SILAC data combined with Tandem Mass Tag (TMT)
+        labelling, such as <a href="https://doi.org/10.1016/j.molcel.2019.11.010">mePROD</a> or <a href="https://doi.org/10.1126/science.1255784">Thermal Proteome Profiling (TPP)</a>. It 
+        is suitable to analyze any combination of SILAC with TMT. The tool will normalize the data
+        based on all peptides and then either perform the mePROD workflow, where a baseline is used to
+        estimate the co-isolation for high-sensitivity protein translation (only heavy peptides will be reported), or it will
+        extract quantifications for light and heavy separately and writes them to output files.
+
+        In the "Show Results" area the data is visualized for first impressions.
           <br> The supported input types are: ProteomeDiscoverer output text files (tab delimited) or plain text files (please refer to <a href="/help">documentation</a>)
         </p>
       </div>

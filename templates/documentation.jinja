@@ -6,7 +6,11 @@
     <p align="justify">The <b>DynaTMT tool</b> can be used to analyze <b>m</b>ultiplexed <b>e</b>nhanced <b>pro</b>tein <b>d</b>ynamic mass spectrometry (mePROD) data. mePROD uses pulse SILAC combined with Tandem Mass Tag (TMT) labelling to profile newly synthesized proteins. Through a booster channel, that contains a fully heavy labelled digest, the identification rate of labelled peptides is greatly enhanced, compared to other pSILAC experiments. Through the multiplexing capacity of TMT reagents it is possible during the workflow to use the boost signal as a carrier that improves survey scan intensities, but does not interfere with quantification of the pulsed samples. This workflow makes labelling times of minutes (down to 15min in the original publication) possible.
     Additionally, mePROD utilizes a baseline channel, comprised of a non-SILAC labelled digest that serves as a proxy for isolation interference and greatly improves quantification dynamic range. Quantification values of a heavy labelled peptide in that baseline channel are derived from co-fragmented heavy peptides and will be subtracted from the other quantifications. 
     For more information on mePROD, please refer to the original publication <a href="https://doi.org/10.1016/j.molcel.2019.11.010">Klann et al. 2020</a>.
-    </p>
+    <br>
+    <br><i>
+    It can also be used to analyze any combination experiment of SILAC with TMT, if used in the pSILAC mode (see Navigation Bar). The Documentation holds true
+    for both workflows, just the baseline related calcualtions are missing in pSILAC compared to mePROD.
+    </i></p>
     <h2>Input Files</h2>
     <p align="justify">
         DynaTMT by default uses ProteomeDiscoverer Peptide or PSM file outputs in tab-delimited text. Relevant column headers are automatically extracted from the input file and processed accordingly.
