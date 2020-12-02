@@ -239,6 +239,10 @@ def get_latest_result_TPPh():
 
 
 if __name__  == '__main__':
+    if not os.path.exists("./Results"):
+        os.mkdir("./Results")
+    if not os.path.exists("./Temp"):
+        os.mkdir("./Temp")
     import webbrowser
     webbrowser.open("http://127.0.0.1:5000")
     app.run()

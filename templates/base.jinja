@@ -20,24 +20,9 @@
   </head>
 
   <body class="bg-light">
-    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-      <a class="navbar-brand" href="/">DynaTMT</a>
-      <div id="navbar" class="collapse navbar-collapse">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="/">mePROD</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/help">Documentation</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/TPP">pSILAC</a>
-          </li>
-        </ul>
-      </div>
-    </nav>
+    {% include "partials/menu.jinja" %}
     <div class='jumbotron'>
-      <div class="container">
+      <div class="container mt-5">
         <h1 class="display-3">DynaTMT - v0.4</h1>
         <p align="justify" class="lead">This tool analyzes (p)SILAC data combined with Tandem Mass Tag (TMT)
         labelling, such as <a href="https://doi.org/10.1016/j.molcel.2019.11.010">mePROD</a> or <a href="https://doi.org/10.1126/science.1255784">Thermal Proteome Profiling (TPP)</a>. It 
