@@ -70,7 +70,11 @@ def processor():
     print("Normalization Method:",session['normal_method'])
     if session['itype'] == "PD":
         print('STARTING PD PROCESSING')
-        process_PD.IT_adjustment()
+        if session['it_adjustment'] == True:
+
+            process_PD.IT_adjustment()
+        else:
+            pass
         if session['normal_method'] == 'TI':
             print('Total intensity normalisation')
             process_PD.total_intensity_normalisation()
@@ -136,7 +140,11 @@ def processor_TPP():
     print("Normalization Method:",session['normal_method'])
     if session['itype'] == "PD":
         print('STARTING PD PROCESSING')
-        process_PD.IT_adjustment()
+        if session['it_adjustment'] == True:
+
+            process_PD.IT_adjustment()
+        else:
+            pass
         if session['normal_method'] == 'TI':
             print('Total intensity normalisation')
             process_PD.total_intensity_normalisation()
@@ -228,10 +236,6 @@ def get_latest_result_TPP():
 def get_latest_result_TPPh():
     data = pd.read_csv("./Temp/Heavy_Result.csv")
     return(data.to_csv())
-# @app.route("/runs/", methods=["GET", "POST"])
-# def runs():
-#   # Returns a list of all runs to select from
-#   pass
 
 
 if __name__  == '__main__':
