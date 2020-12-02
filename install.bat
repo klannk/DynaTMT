@@ -1,1 +1,0 @@
-pip install pandas,numpy,flask,scipy

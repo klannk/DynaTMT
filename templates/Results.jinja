@@ -1,14 +1,21 @@
 {% extends "base.jinja" %}
 
 {% block content %}
-<div id="tester" style="width:600px;height:250px;">
+<div class="container">
+    <h2 align="center">Abdundances after processing</h2>
+    <div id="tester">
+    </div>
 </div>
 
 
 
 
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        parse_data();
+        
+    })
 
-<script type="text/javascript"
-         src="{{ url_for('static', filename='result.js') }}"></script>
+</script>
 
 {% endblock %}

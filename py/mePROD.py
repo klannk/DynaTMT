@@ -129,7 +129,7 @@ class PD_input:
         channels = [col for col in input.columns if 'Abundance:' in col]
         MPA=list([col for col in input.columns if 'Master Protein Accession' in col])
         MPA=MPA[0]
-        PSM_grouped=PSM.groupby(by=[MPA])
+        PSM_grouped=input.groupby(by=[MPA])
         result={}
         for group in PSM_grouped.groups:
             temp=PSM_grouped.get_group(group)

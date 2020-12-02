@@ -7,7 +7,6 @@ import os
 import time
 # from flask_cors import CORS
 app = Flask(__name__)
-# CORS(app)
 app.secret_key = '123'
 
 
@@ -112,7 +111,7 @@ def results_index():
 @app.route("/api/get_latest",methods=["GET"])
 def get_latest_result():
     data = pd.read_json("./Temp/Result.json")
-    return(data.to_json())
+    return(data.to_csv())
 # @app.route("/runs/", methods=["GET", "POST"])
 # def runs():
 #   # Returns a list of all runs to select from
@@ -120,5 +119,6 @@ def get_latest_result():
 
 
 if __name__  == '__main__':
-    
+    import webbrowser
+    webbrowser.open("http://127.0.0.1:5000")
     app.run()
