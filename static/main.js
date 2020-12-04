@@ -1,3 +1,5 @@
+let original_data;
+
 function bindEventHandlerForMain() {
   /* This function binds events to the GO Button in the Params.jinja HTML file. It first sends a request submitting the analysis parameters to the python server,
   upon success it POSTs the file to the python server, that then gets processed.*/
@@ -19,7 +21,9 @@ function bindEventHandlerForMain() {
           if (data) {
             console.log("Returned:",data)}
             var formData = new FormData();
+            
             formData.append('file', $('input[type=file]')[0].files[0]);
+            original_data = formData
             $.ajax({
               type: 'POST',
               url: '/api/process',
@@ -27,9 +31,14 @@ function bindEventHandlerForMain() {
               contentType: false,
               cache: false,
               processData: false,
-              success: function(data) {
+              success: function(data1) {
                   resbutt.disabled=false;
-                  gobutt.innerText="GO"
+                  gobutt.innerText="GO";
+                  let returned_data = JSON.parse(data1);
+                 
+                  stats_heavy = returned_data
+                  console.log(stats_heavy);
+                  
         }
         })
       }})
@@ -54,7 +63,7 @@ function bindEventHandlerForMain_TPP() {
       let formdata = {input_type:itype.value, normal_method:inorm.value, it_adj:iit.value}
       dataasjson=JSON.stringify(formdata)
       alert('Running script')
-      $.ajax({url:pythonscript,dataType: "json",contentType: 'application/json;charset=UTF-8', type:'POST',data:dataasjson, success: function(data) {
+      $.ajax({url:pythonscript,dataType: "json", contentType: 'application/json;charset=UTF-8', type:'POST', data:dataasjson, success: function(data) {
           if (data) {
             console.log("Returned:",data)}
             var formData = new FormData();
@@ -66,11 +75,15 @@ function bindEventHandlerForMain_TPP() {
               contentType: false,
               cache: false,
               processData: false,
-              success: function() {
-                  console.log('Bar')
+              success: function(d1) {
+                  console.log('Bar');
                   resbutt.disabled=false;
-                  gobutt.innerText="GO"
-                  
+                  gobutt.innerText="GO";
+                  let returned_data = JSON.parse(d1);
+                  stats_light = JSON.parse(returned_data['light'])
+                  stats_heavy = JSON.parse(returned_data['heavy'])
+                  console.log(stats_heavy);
+                  console.log(stats_light);
               },
               error: function(xhr, status, error) {
                 alert(xhr.responseText);

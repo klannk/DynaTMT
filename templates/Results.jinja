@@ -1,6 +1,16 @@
 {% extends "base.jinja" %}
 
 {% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <div id="radar">
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div id="other">
+        </div>
+    </div>
+</div>
 <div class="container">
     <h2 class="mt-5 text-center">Abdundances after processing</h2>
     <div id="tester">
@@ -9,6 +19,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', (event) => {
+        stats_getter();
         parse_data();
         
     })

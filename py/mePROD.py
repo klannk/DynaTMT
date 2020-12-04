@@ -121,6 +121,31 @@ class PD_input:
         self.input_file = result_df
         return result_df
 
+
+    def statistics(self, input):
+        '''This function provides summary statistics for quality control assessment.
+        '''
+        try:
+            missed = '# Missed Cleavages'
+            precursor = 'Intensity'
+            delta_m = 'DeltaM [ppm]'
+            it_time = 'Ion Inject Time [ms]'
+            iso_int = 'Isolation Interference [%]'
+        
+            
+
+            no_missed = len(input[input[missed] == 0].index)
+            total_entries = len(input.index)
+            percent_missed = no_missed / total_entries
+
+            median_prec = input[precursor].median()
+            median_delta = input[delta_m].median()
+            median_it = input[it_time].median()
+            median_iso = input[iso_int].median()
+            return percent_missed,median_prec,median_delta,median_it,median_iso
+        except KeyError:
+            pass
+
     def TMM(self):
         '''This function implements TMM normalisation (Robinson & Oshlack, 2010, Genome Biology). It modifies the self.input_file class
         variable.

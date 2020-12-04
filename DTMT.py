@@ -1,6 +1,6 @@
 from flask import Flask, request, redirect, render_template,session
 from py.mePROD import PD_input,plain_text_input
-
+import json
 import pandas as pd 
 import numpy as np
 import os
@@ -40,7 +40,7 @@ def http_resp():
     except ValueError:
         session['baseline_index']=0
         print("DEFAULTED BASELINE")
-    return{'sucess':'yes'}
+    return {'sucess':'yes'}
     
 @app.route("/api/params_TPP", methods=["POST"])
 def http_resp_TPP():
@@ -52,7 +52,7 @@ def http_resp_TPP():
     else:
         session['it_adjustment']=False
     
-    return{'sucess':'yes'}
+    return {'sucess':'yes'}
     
 
 
@@ -89,11 +89,13 @@ def processor():
             print('No Normalization performed')
             
         process_PD.extract_heavy()
+
+        
         baselined=process_PD.baseline_correction(i_baseline=session['baseline_index'])
         timestr=time.strftime("%Y%m%d-%H%M%S")
         baselined.to_csv("./Results/"+timestr+".txt",sep='\t')
         baselined.to_csv("./Temp/Result.csv")
-        return(baselined.to_json())
+        return(json.dumps({}))
     elif session['itype'] == "MQ":
         
         print('STARTING PLAIN TEXT PROCESSING')
@@ -115,6 +117,8 @@ def processor():
         else:
             print('No Normalization performed')
         process_MQ.extract_heavy()
+
+
         baselined=process_MQ.baseline_correction(i_baseline=session['baseline_index'])
         timestr=time.strftime("%Y%m%d-%H%M%S")
         baselined.to_csv("./Results/"+timestr+".txt",sep='\t')
@@ -211,6 +215,8 @@ def processor_TPP():
         print('Input Type Error')
         return('Input Type Error')
 
+
+
 @app.route("/api/results", methods=["GET"])
 def results_index():
 
@@ -239,10 +245,11 @@ def get_latest_result_TPPh():
 
 
 if __name__  == '__main__':
-    if not os.path.exists("./Results"):
-        os.mkdir("./Results")
-    if not os.path.exists("./Temp"):
-        os.mkdir("./Temp")
+    path = os.path.dirname(os.path.realpath(__file__))    
+    if not os.path.exists(os.path.join(path,"./Results")):
+        os.mkdir(os.path.join(path,"./Results"))
+    if not os.path.exists(os.path.join(path,"./Temp")):
+        os.mkdir(os.path.join(path,"./Temp"))
     import webbrowser
     webbrowser.open("http://127.0.0.1:5000")
     app.run()
