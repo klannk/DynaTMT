@@ -47,7 +47,7 @@ class PD_input:
         Heavy_peptides=input[input[modi].str.contains('TMTK8|Label|TMTproK8',na=False)]
 
         print("Extraction Done","Extracted Peptides:", len(Heavy_peptides))
-        self.input_file = Heavy_peptides
+        return Heavy_peptides
 
 
     def extract_light (self):
@@ -68,7 +68,7 @@ class PD_input:
         print("Extraction Done","Extracted Peptides:", len(light_peptides))
         return light_peptides
 
-    def baseline_correction(self,threshold=5,i_baseline=0,method='sum'):
+    def baseline_correction(self,input,threshold=5,i_baseline=0,method='sum'):
         '''This function takes the self.input_file DataFrame and substracts the baseline/noise channel from all other samples. The index of the
         baseline column is defaulted to 0. Set i_baseline=X to change baseline column.
 
@@ -80,7 +80,7 @@ class PD_input:
 
         Modifies self.input_file variable and returns a pandas df.
         '''
-        input = self.input_file
+        
         print("Baseline correction")
         channels=[col for col in input.columns if 'Abundance:' in col]
         MPA = list([col for col in input.columns if 'Master Protein Accession' in col])
@@ -123,28 +123,11 @@ class PD_input:
 
 
     def statistics(self, input):
-        '''This function provides summary statistics for quality control assessment.
+        '''This function provides summary statistics for quality control assessment from Proteome Discoverer Output.
         '''
-        try:
-            missed = '# Missed Cleavages'
-            precursor = 'Intensity'
-            delta_m = 'DeltaM [ppm]'
-            it_time = 'Ion Inject Time [ms]'
-            iso_int = 'Isolation Interference [%]'
-        
-            
-
-            no_missed = len(input[input[missed] == 0].index)
-            total_entries = len(input.index)
-            percent_missed = no_missed / total_entries
-
-            median_prec = input[precursor].median()
-            median_delta = input[delta_m].median()
-            median_it = input[it_time].median()
-            median_iso = input[iso_int].median()
-            return percent_missed,median_prec,median_delta,median_it,median_iso
-        except KeyError:
-            pass
+        numeric_without_tmt_channels=[col for col in input.columns if not 'Abundance:' in col]
+        print(input[numeric_without_tmt_channels].describe(include=[np.number]))
+        return(input[numeric_without_tmt_channels].describe(include=[np.number]))
 
     def TMM(self):
         '''This function implements TMM normalisation (Robinson & Oshlack, 2010, Genome Biology). It modifies the self.input_file class

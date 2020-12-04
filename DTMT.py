@@ -1,5 +1,5 @@
 from flask import Flask, request, redirect, render_template,session
-from py.mePROD import PD_input,plain_text_input
+from py.DynaTMT import PD_input,plain_text_input
 import json
 import pandas as pd 
 import numpy as np
@@ -88,12 +88,19 @@ def processor():
         else:
             print('No Normalization performed')
             
-        process_PD.extract_heavy()
-
+        heavy = process_PD.extract_heavy()
+        light = process_PD.extract_light()
         
-        baselined=process_PD.baseline_correction(i_baseline=session['baseline_index'])
+        stats_heavy = process_PD.statistics(heavy)
+        stats_light = process_PD.statistics(light)
+        
+        baselined=process_PD.baseline_correction(heavy,i_baseline=session['baseline_index'])
         timestr=time.strftime("%Y%m%d-%H%M%S")
-        baselined.to_csv("./Results/"+timestr+".txt",sep='\t')
+        os.mkdir("./Results/"+timestr+"/")
+        baselined.to_csv("./Results/"+timestr+"/processed_result.txt",sep='\t')
+        stats_light.to_csv("./Results/"+timestr+"/statistics_light.txt",sep='\t')
+        stats_heavy.to_csv("./Results/"+timestr+"/statistics_heavy.txt",sep='\t')
+
         baselined.to_csv("./Temp/Result.csv")
         return(json.dumps({}))
     elif session['itype'] == "MQ":
@@ -121,7 +128,8 @@ def processor():
 
         baselined=process_MQ.baseline_correction(i_baseline=session['baseline_index'])
         timestr=time.strftime("%Y%m%d-%H%M%S")
-        baselined.to_csv("./Results/"+timestr+".txt",sep='\t')
+        os.mkdir("./Results/"+timestr+"/")
+        baselined.to_csv("./Results/"+timestr+"/processed_result.txt",sep='\t')
         baselined.to_csv("./Temp/Result.csv")
         return(baselined.to_json())
 
@@ -162,16 +170,26 @@ def processor_TPP():
         else:
             print('No Normalization performed')
             
-        
+        heavy = process_PD.extract_heavy()
         light = process_PD.extract_light()
-        process_PD.extract_heavy()
-        heavy = process_PD.input_file
-
+        
+        stats_heavy = process_PD.statistics(heavy)
+        stats_light = process_PD.statistics(light)
+        
+        
+        
         light=process_PD.sum_peptides_for_proteins(light)
         heavy=process_PD.sum_peptides_for_proteins(heavy)
         timestr=time.strftime("%Y%m%d-%H%M%S")
-        heavy.to_csv("./Results/"+timestr+"_heavy.txt",sep='\t')
-        light.to_csv("./Results/"+timestr+"_light.txt",sep='\t')
+        os.mkdir("./Results/"+timestr+"/")
+        
+        stats_light.to_csv("./Results/"+timestr+"/statistics_light.txt",sep='\t')
+        stats_heavy.to_csv("./Results/"+timestr+"/statistics_heavy.txt",sep='\t')
+
+
+
+        heavy.to_csv("./Results/"+timestr+"/Result_heavy.txt",sep='\t')
+        light.to_csv("./Results/"+timestr+"/Result_light.txt",sep='\t')
         heavy.to_csv("./Temp/Heavy_Result.csv")
         light.to_csv("./Temp/Light_Result.csv")
         
@@ -205,8 +223,10 @@ def processor_TPP():
         light=process_MQ.sum_peptides_for_proteins(light)
         heavy=process_MQ.sum_peptides_for_proteins(heavy)
         timestr=time.strftime("%Y%m%d-%H%M%S")
-        heavy.to_csv("./Results/"+timestr+"_heavy.txt",sep='\t')
-        light.to_csv("./Results/"+timestr+"_light.txt",sep='\t')
+        os.mkdir("./Results/"+timestr+"/")
+
+        heavy.to_csv("./Results/"+timestr+"/Result_heavy.txt",sep='\t')
+        light.to_csv("./Results/"+timestr+"/Result_light.txt",sep='\t')
         heavy.to_csv("./Temp/Heavy_Result.csv")
         light.to_csv("./Temp/Light_Result.csv")
         return(heavy.to_json(),light.to_json())
@@ -221,6 +241,10 @@ def processor_TPP():
 def results_index():
 
     return render_template('Results.jinja')
+
+@app.route("/all_results", methods=["GET"])
+def all_results():
+    return render_template('all_results_page.jinja')
 
 @app.route("/api/results_TPP", methods=["GET"])
 def results_index_TPP():
