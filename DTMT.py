@@ -306,8 +306,8 @@ def return_results():
             return resp
 
     elif ftype == 'pSILAC':
-        dataframe_light = pd.read_csv(folder+"/Light_Results.txt",sep='\t')
-        dataframe_heavy = pd.read_csv(folder+"/Heavy_Results.txt",sep='\t')
+        dataframe_light = pd.read_csv(folder+"/Result_light.txt",sep='\t')
+        dataframe_heavy = pd.read_csv(folder+"/Result_heavy.txt",sep='\t')
         try:
             stats_light = pd.read_csv(folder +"/statistics_light.txt",sep='\t')
             stats_heavy = pd.read_csv(folder +"/statistics_heavy.txt",sep='\t')
@@ -343,7 +343,7 @@ def get_result_type():
     if 'processed_result.txt' in list_of_files:
         print('meprod')
         return json.dumps({'type':'mePROD'})
-    elif 'Heavy_result.txt' in list_of_files:
+    elif 'Result_heavy.txt' in list_of_files:
         print('pSILAC')
         return json.dumps({'type':'pSILAC'})
         
