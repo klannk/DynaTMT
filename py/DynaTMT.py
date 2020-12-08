@@ -35,9 +35,7 @@ class PD_input:
     def extract_heavy (self):
         '''This function takes the class variable self.input_file dataframe and extracts all heavy labelled peptides. Naming of the 
         Modifications: Arg10: should contain Label, TMTK8, TMTproK8. Strings for modifications can be edited below for customisation.
-
         writes filtered self.input_file back to class
-
         '''
         input = self.input_file
         print("Extraction of labelled peptides")
@@ -47,15 +45,13 @@ class PD_input:
         Heavy_peptides=input[input[modi].str.contains('TMTK8|Label|TMTproK8',na=False)]
 
         print("Extraction Done","Extracted Peptides:", len(Heavy_peptides))
-        self.input_file = Heavy_peptides
+        return Heavy_peptides
 
 
     def extract_light (self):
         '''This function takes the class variable self.input_file dataframe and extracts all light labelled peptides. Naming of the 
         Modifications: Arg10: should contain Label, TMTK8, TMTproK8. Strings for modifications can be edited below for customisation.
-
         Returns light peptide DF
-
         '''
         input = self.input_file
         print("Extraction of labelled peptides")
@@ -68,19 +64,16 @@ class PD_input:
         print("Extraction Done","Extracted Peptides:", len(light_peptides))
         return light_peptides
 
-    def baseline_correction(self,threshold=5,i_baseline=0,method='sum'):
+    def baseline_correction(self,input,threshold=5,i_baseline=0,method='sum'):
         '''This function takes the self.input_file DataFrame and substracts the baseline/noise channel from all other samples. The index of the
         baseline column is defaulted to 0. Set i_baseline=X to change baseline column.
-
         Threshold: After baseline substraction the remaining average signal has to be above threshold to be included. Parameter is set with threshold=X.
         This prevents very low remaining signal peptides to produce artificially high fold changes. Has to be determined empirically.
-
         Method: The method parameter sets the method for protein wollup quantification. Default is 'sum', which will sum all peptides for
         the corresponding protein. Alternatives are 'median' or 'mean'. If no or invalid input is given it uses 'sum'.
-
         Modifies self.input_file variable and returns a pandas df.
         '''
-        input = self.input_file
+        
         print("Baseline correction")
         channels=[col for col in input.columns if 'Abundance:' in col]
         MPA = list([col for col in input.columns if 'Master Protein Accession' in col])
@@ -120,6 +113,14 @@ class PD_input:
         result_df=pd.DataFrame.from_dict(results, orient='index',columns=channels)
         self.input_file = result_df
         return result_df
+
+
+    def statistics(self, input):
+        '''This function provides summary statistics for quality control assessment from Proteome Discoverer Output.
+        '''
+        numeric_without_tmt_channels=[col for col in input.columns if not 'Abundance:' in col]
+        print(input[numeric_without_tmt_channels].describe(include=[np.number]))
+        return(input[numeric_without_tmt_channels].describe(include=[np.number]))
 
     def TMM(self):
         '''This function implements TMM normalisation (Robinson & Oshlack, 2010, Genome Biology). It modifies the self.input_file class
@@ -181,7 +182,6 @@ class PD_input:
     def sum_peptides_for_proteins(self,input):
         '''This function takes a peptide/PSM level DataFrame stored in self.input_file and performs Protein quantification rollup based
         on the sum of all corresponding peptides.
-
         Returns a Protein level DataFrame and modifies self.input_file
         '''
         print('Calculate Protein quantifications from PSM')
@@ -256,9 +256,7 @@ class plain_text_input:
     def extract_heavy (self):
         '''This function takes the class variable self.input_file dataframe and extracts all heavy labelled peptides. Naming of the 
         Modifications: Arg10: should contain Label, TMTK8, TMTproK8. Strings for modifications can be edited below for customisation.
-
         writes filtered self.input_file back to class
-
         '''
         input = self.input_file
         print("Extraction of labelled peptides")
@@ -274,7 +272,6 @@ class plain_text_input:
     def extract_light (self):
         '''This function takes the class variable self.input_file dataframe and extracts all light labelled peptides. Naming of the 
         Modifications: Arg10: should contain Label, TMTK8, TMTproK8. Strings for modifications can be edited below for customisation.
-
         Returns light peptide DF
         '''
         input = self.input_file
@@ -291,13 +288,10 @@ class plain_text_input:
     def baseline_correction(self,threshold=5,i_baseline=0,method='TI'):
         '''This function takes the self.input_file DataFrame and substracts the baseline/noise channel from all other samples. The index of the
         baseline column is defaulted to 0. Set i_baseline=X to change baseline column.
-
         Threshold: After baseline substraction the remaining average signal has to be above threshold to be included. Parameter is set with threshold=X.
         This prevents very low remaining signal peptides to produce artificially high fold changes. Has to be determined empirically.
-
         Method: The method parameter sets the method for protein wollup quantification. Default is 'sum', which will sum all peptides for
         the corresponding protein. Alternatives are 'median' or 'mean'. If no or invalid input is given it uses 'sum'.
-
         Modifies self.input_file variable and returns a pandas df.
         '''
         input = self.input_file
@@ -393,7 +387,6 @@ class plain_text_input:
     def sum_peptides_for_proteins(self,input):
         '''This function takes a peptide/PSM level DataFrame stored in self.input_file and performs Protein quantification rollup based
         on the sum of all corresponding peptides.
-
         Returns a Protein level DataFrame and modifies self.input_file
         '''
         
