@@ -291,6 +291,7 @@ def return_results():
                 'stats_heavy':stats_heavy.to_numpy().tolist(),
                 'stats_columns':list(stats_light.columns),
                 'stats':'yes',
+                'stats_index':list(stats_light.iloc[:,0])
             }
             resp = Response()
             resp.set_data(json.dumps(data_as_json))
@@ -317,6 +318,7 @@ def return_results():
                 'stats_heavy':stats_heavy.to_numpy().tolist(),
                 'stats_columns':list(stats_light.columns),
                 'stats':'yes',
+                'stats_index':list(stats_light.iloc[:,0])
             }
             return Response(json.dumps(data_as_json),mimetype='text/json')
        
