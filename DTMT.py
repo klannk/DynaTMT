@@ -1,11 +1,11 @@
-from flask import Flask, request, redirect, render_template,session
+from flask import Flask, request, redirect, render_template,session, Response
 from py.DynaTMT import PD_input,plain_text_input
 import json
 import pandas as pd 
 import numpy as np
 import os
 import time
-# from flask_cors import CORS
+
 app = Flask(__name__)
 app.secret_key = '123'
 
@@ -266,6 +266,87 @@ def get_latest_result_TPP():
 def get_latest_result_TPPh():
     data = pd.read_csv("./Temp/Heavy_Result.csv")
     return(data.to_csv())
+
+
+@app.route("/api/populate_select",methods=["GET"])
+def get_folders():
+    folders=[name for name in os.listdir("./Results")]
+    print(folders)
+    return json.dumps(folders)
+
+@app.route("/api/get_defined_result",methods=["POST"])
+def return_results():
+    data = request.json
+    folder = data['result']
+    folder = os.path.join("./Results/",folder)
+    ftype = data['type']
+    if ftype == 'mePROD':
+        dataframe = pd.read_csv(folder+"/processed_result.txt",sep='\t')
+        try:
+            stats_light = pd.read_csv(folder +"/statistics_light.txt",sep='\t')
+            stats_heavy = pd.read_csv(folder +"/statistics_heavy.txt",sep='\t')
+            data_as_json = {
+                'Data':dataframe.to_numpy().tolist(),
+                'stats_light':stats_light.to_numpy().tolist(),
+                'stats_heavy':stats_heavy.to_numpy().tolist(),
+                'stats_columns':list(stats_light.columns),
+                'stats':'yes',
+            }
+            resp = Response()
+            resp.set_data(json.dumps(data_as_json))
+            return resp
+        except:
+            data_as_json = {
+                'Data':dataframe.to_numpy().tolist(),
+                'stats':'no'
+            }
+            resp = Response()
+            resp.set_data(json.dumps(data_as_json))
+            return resp
+
+    elif ftype == 'pSILAC':
+        dataframe_light = pd.read_csv(folder+"/Light_Results.txt",sep='\t')
+        dataframe_heavy = pd.read_csv(folder+"/Heavy_Results.txt",sep='\t')
+        try:
+            stats_light = pd.read_csv(folder +"/statistics_light.txt",sep='\t')
+            stats_heavy = pd.read_csv(folder +"/statistics_heavy.txt",sep='\t')
+            data_as_json = {
+                'Data_Light':dataframe_light.to_numpy().tolist(),
+                'Data_heavy':dataframe_heavy.to_numpy().tolist(),
+                'stats_light':stats_light.to_numpy().tolist(),
+                'stats_heavy':stats_heavy.to_numpy().tolist(),
+                'stats_columns':list(stats_light.columns),
+                'stats':'yes',
+            }
+            return Response(json.dumps(data_as_json),mimetype='text/json')
+       
+        except:
+            data_as_json = {
+                'Data':dataframe.to_numpy().tolist(),
+                'stats':'no'
+            }
+            resp = Response()
+            resp.set_data(json.dumps(data_as_json))
+            return resp
+    else:
+        return('ERROR')
+    
+@app.route("/api/result_type",methods=["GET","POST"])
+def get_result_type():
+    data = request.json
+    folder = data['result']
+    folder = os.path.join("./Results/",folder)
+    list_of_files = os.listdir(folder)
+    print(list_of_files)
+    if 'processed_result.txt' in list_of_files:
+        print('meprod')
+        return json.dumps({'type':'mePROD'})
+    elif 'Heavy_result.txt' in list_of_files:
+        print('pSILAC')
+        return json.dumps({'type':'pSILAC'})
+        
+    else:
+        return json.dumps({'return':'fail'})
 
 
 if __name__  == '__main__':

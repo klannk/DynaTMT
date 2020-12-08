@@ -6,9 +6,35 @@
     <div class="jumbotron">
         <label for='results_selector'>Select result to visualize:</label>
         <select class="custom-select d-block w-100" id="result_selector">
+        
         </select>
+        <button class="btn btn-primary btn-lg btn-block mt-4" id='vis_button'>Show Visualizations</button>
     </div>
+    <div class="jumbotron" id="abundances">
+        <h2 class="text-center">Abundances</h2>
+        <div id="plot_container_01">
+        </div>
+    </div>
+    <div class="jumbotron" id="statistics">
+        <h2 class="text-center">Statistics</h2>
+        <h3>
+        <div id="plot_container_02" class="col-md-4">
+        </div>
+    </div>
+    
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        
+        
+        document.getElementById("abundances").style.display = "none"
+        document.getElementById("statistics").style.display = "none"
+        populate_select();
+        visualize_page_plotter();
+        
+    })
 
+    
+</script>
 
 {% endblock %}
