@@ -122,7 +122,7 @@ function boxplots(data, length) {
   let channels = data.columns;
   for (var i = 1; i < length; i++) {
     channel_name = channels[i];
-
+    
     y0 = data.iloc({ columns: [String(i)] }).values.flat();
     var trace = {
       y: y0,
@@ -145,7 +145,8 @@ async function parse_data(data) {
   let df = await dfd.read_csv("/api/get_latest");
   const channels_length = df.columns.length;
   data1 = boxplots(df, channels_length);
-  var layout = {
+  var layout = {paper_bgcolor:'rgba(0,0,0,0)',
+    plot_bgcolor:'rgba(0,0,0,0)',
     colorway: [
       "#f3cec9",
       "#e7a4b6",
@@ -172,7 +173,8 @@ async function parse_data_TPP_light(data) {
   let df = await dfd.read_csv("/api/get_latest_TPP_light");
   const channels_length = df.columns.length;
   data1 = boxplots(df, channels_length);
-  var layout = {
+  var layout = {paper_bgcolor:'rgba(0,0,0,0)',
+    plot_bgcolor:'rgba(0,0,0,0)',
     colorway: [
       "#f3cec9",
       "#e7a4b6",
