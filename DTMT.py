@@ -97,6 +97,7 @@ def processor():
         baselined=process_PD.baseline_correction(heavy,i_baseline=session['baseline_index'])
         timestr=time.strftime("%Y%m%d-%H%M%S")
         os.mkdir("./Results/"+timestr+"/")
+        baselined.index.name= 'Accession'
         baselined.to_csv("./Results/"+timestr+"/processed_result.txt",sep='\t')
         stats_light.to_csv("./Results/"+timestr+"/statistics_light.txt",sep='\t')
         stats_heavy.to_csv("./Results/"+timestr+"/statistics_heavy.txt",sep='\t')
@@ -129,6 +130,7 @@ def processor():
         baselined=process_MQ.baseline_correction(i_baseline=session['baseline_index'])
         timestr=time.strftime("%Y%m%d-%H%M%S")
         os.mkdir("./Results/"+timestr+"/")
+        baselined.index.name='Accession'
         baselined.to_csv("./Results/"+timestr+"/processed_result.txt",sep='\t')
         baselined.to_csv("./Temp/Result.csv")
         return(baselined.to_json())
@@ -179,7 +181,9 @@ def processor_TPP():
         
         
         light=process_PD.sum_peptides_for_proteins(light)
+        light.index.name = 'Accession'
         heavy=process_PD.sum_peptides_for_proteins(heavy)
+        heavy.index.name= 'Accession'
         timestr=time.strftime("%Y%m%d-%H%M%S")
         os.mkdir("./Results/"+timestr+"/")
         
@@ -221,7 +225,9 @@ def processor_TPP():
         heavy = process_MQ.input_file
 
         light=process_MQ.sum_peptides_for_proteins(light)
+        light.index.name= 'Accession'
         heavy=process_MQ.sum_peptides_for_proteins(heavy)
+        heavy.index.name= 'Accession'
         timestr=time.strftime("%Y%m%d-%H%M%S")
         os.mkdir("./Results/"+timestr+"/")
 
@@ -295,6 +301,7 @@ def return_results():
             }
             resp = Response()
             resp.set_data(json.dumps(data_as_json))
+            
             return resp
         except:
             data_as_json = {

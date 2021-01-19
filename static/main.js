@@ -283,7 +283,8 @@ function get_result(cb) {
 
           console.log(return_data);
           cb(return_data, dtype)
-        } else if (dtype == "pSILAC") {
+        } 
+        else if (dtype == "pSILAC") {
           console.log(return_data);
           cb(return_data, dtype)
           //Parse as pSILAC
