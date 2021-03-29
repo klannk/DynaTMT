@@ -1,5 +1,5 @@
 from flask import Flask, request, redirect, render_template,session, Response
-from py.DynaTMT import PD_input,plain_text_input
+from DynaTMT.DynaTMT import PD_input,plain_text_input
 import json
 import pandas as pd 
 import numpy as np
@@ -8,8 +8,6 @@ import time
 
 app = Flask(__name__)
 app.secret_key = '123'
-
-
 
 @app.route("/", methods=["GET"])
 def index():
@@ -94,10 +92,12 @@ def processor():
         stats_heavy = process_PD.statistics(heavy)
         stats_light = process_PD.statistics(light)
         
-        baselined=process_PD.baseline_correction(heavy,i_baseline=session['baseline_index'])
+        baselined=process_PD.baseline_correction_peptide_return(heavy,i_baseline=session['baseline_index'])
         timestr=time.strftime("%Y%m%d-%H%M%S")
         os.mkdir("./Results/"+timestr+"/")
-        baselined.index.name= 'Accession'
+        baselined.to_csv("./Results/"+timestr+"/processed_result_peptides.txt",sep='\t')
+        
+        baselined = process_PD.sum_peptides_for_proteins(baselined)
         baselined.to_csv("./Results/"+timestr+"/processed_result.txt",sep='\t')
         stats_light.to_csv("./Results/"+timestr+"/statistics_light.txt",sep='\t')
         stats_heavy.to_csv("./Results/"+timestr+"/statistics_heavy.txt",sep='\t')
@@ -124,13 +124,14 @@ def processor():
             process_MQ.TMM()
         else:
             print('No Normalization performed')
-        process_MQ.extract_heavy()
+        heavy = process_MQ.extract_heavy()
 
 
-        baselined=process_MQ.baseline_correction(i_baseline=session['baseline_index'])
+        baselined=process_MQ.baseline_correction_peptide_return(heavy,i_baseline=session['baseline_index'])
         timestr=time.strftime("%Y%m%d-%H%M%S")
         os.mkdir("./Results/"+timestr+"/")
-        baselined.index.name='Accession'
+        baselined.to_csv("./Results/"+timestr+"/processed_result_peptides.txt",sep='\t')
+        baselined = process_MQ.sum_peptides_for_proteins(baselined)
         baselined.to_csv("./Results/"+timestr+"/processed_result.txt",sep='\t')
         baselined.to_csv("./Temp/Result.csv")
         return(baselined.to_json())
@@ -181,7 +182,7 @@ def processor_TPP():
         
         
         light=process_PD.sum_peptides_for_proteins(light)
-        light.index.name = 'Accession'
+        light.index.name= 'Accession'
         heavy=process_PD.sum_peptides_for_proteins(heavy)
         heavy.index.name= 'Accession'
         timestr=time.strftime("%Y%m%d-%H%M%S")
