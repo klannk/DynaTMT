@@ -175,7 +175,10 @@ def processor_TPP():
             
         heavy = process_PD.extract_heavy()
         light = process_PD.extract_light()
-        
+        timestr=time.strftime("%Y%m%d-%H%M%S")
+        os.mkdir("./Results/"+timestr+"/")
+        heavy.to_csv("./Results/"+timestr+"/Result_heavy_peptides.txt",sep='\t')
+        light.to_csv("./Results/"+timestr+"/Result_light_peptides.txt",sep='\t')
         stats_heavy = process_PD.statistics(heavy)
         stats_light = process_PD.statistics(light)
         
@@ -185,8 +188,7 @@ def processor_TPP():
         light.index.name= 'Accession'
         heavy=process_PD.sum_peptides_for_proteins(heavy)
         heavy.index.name= 'Accession'
-        timestr=time.strftime("%Y%m%d-%H%M%S")
-        os.mkdir("./Results/"+timestr+"/")
+
         
         stats_light.to_csv("./Results/"+timestr+"/statistics_light.txt",sep='\t')
         stats_heavy.to_csv("./Results/"+timestr+"/statistics_heavy.txt",sep='\t')
@@ -224,13 +226,15 @@ def processor_TPP():
         light = process_MQ.extract_light()
         process_MQ.extract_heavy()
         heavy = process_MQ.input_file
-
+        timestr=time.strftime("%Y%m%d-%H%M%S")
+        os.mkdir("./Results/"+timestr+"/")
+        heavy.to_csv("./Results/"+timestr+"/Result_heavy_peptides.txt",sep='\t')
+        light.to_csv("./Results/"+timestr+"/Result_light_peptides.txt",sep='\t')
         light=process_MQ.sum_peptides_for_proteins(light)
         light.index.name= 'Accession'
         heavy=process_MQ.sum_peptides_for_proteins(heavy)
         heavy.index.name= 'Accession'
-        timestr=time.strftime("%Y%m%d-%H%M%S")
-        os.mkdir("./Results/"+timestr+"/")
+
 
         heavy.to_csv("./Results/"+timestr+"/Result_heavy.txt",sep='\t')
         light.to_csv("./Results/"+timestr+"/Result_light.txt",sep='\t')
