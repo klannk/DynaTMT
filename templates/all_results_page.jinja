@@ -11,8 +11,13 @@
         <button class="btn btn-primary btn-lg btn-block mt-4" id='vis_button'>Show Visualizations</button>
     </div>
     <div class="jumbotron" id="abundances">
-        <h2 class="text-center">Abundances</h2>
+        <h2 class="text-center" id="abundances_light">Abundances</h2>
         <div id="plot_container_01">
+        </div>
+    </div>
+    <div class="jumbotron" id="abundances_heavy">
+        <h2 class="text-center">Abundances Heavy</h2>
+        <div id="plot_container_heavy">
         </div>
     </div>
     <div class="jumbotron" id="statistics">
@@ -117,6 +122,7 @@
         
         
         document.getElementById("abundances").style.display = "none"
+        document.getElementById("abundances_heavy").style.display = "none"
         document.getElementById("statistics").style.display = "none"
         populate_select();
         visualize_page_plotter();

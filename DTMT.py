@@ -1,5 +1,5 @@
 from flask import Flask, request, redirect, render_template,session, Response
-from py.DynaTMT import PD_input,plain_text_input
+from DynaTMT.DynaTMT import PD_input,plain_text_input
 import json
 import pandas as pd 
 import numpy as np
@@ -8,8 +8,6 @@ import time
 
 app = Flask(__name__)
 app.secret_key = '123'
-
-
 
 @app.route("/", methods=["GET"])
 def index():
@@ -94,9 +92,12 @@ def processor():
         stats_heavy = process_PD.statistics(heavy)
         stats_light = process_PD.statistics(light)
         
-        baselined=process_PD.baseline_correction(heavy,i_baseline=session['baseline_index'])
+        baselined=process_PD.baseline_correction_peptide_return(heavy,i_baseline=session['baseline_index'])
         timestr=time.strftime("%Y%m%d-%H%M%S")
         os.mkdir("./Results/"+timestr+"/")
+        baselined.to_csv("./Results/"+timestr+"/processed_result_peptides.txt",sep='\t')
+        
+        baselined = process_PD.sum_peptides_for_proteins(baselined)
         baselined.to_csv("./Results/"+timestr+"/processed_result.txt",sep='\t')
         stats_light.to_csv("./Results/"+timestr+"/statistics_light.txt",sep='\t')
         stats_heavy.to_csv("./Results/"+timestr+"/statistics_heavy.txt",sep='\t')
@@ -123,12 +124,14 @@ def processor():
             process_MQ.TMM()
         else:
             print('No Normalization performed')
-        process_MQ.extract_heavy()
+        heavy = process_MQ.extract_heavy()
 
 
-        baselined=process_MQ.baseline_correction(i_baseline=session['baseline_index'])
+        baselined=process_MQ.baseline_correction_peptide_return(heavy,i_baseline=session['baseline_index'])
         timestr=time.strftime("%Y%m%d-%H%M%S")
         os.mkdir("./Results/"+timestr+"/")
+        baselined.to_csv("./Results/"+timestr+"/processed_result_peptides.txt",sep='\t')
+        baselined = process_MQ.sum_peptides_for_proteins(baselined)
         baselined.to_csv("./Results/"+timestr+"/processed_result.txt",sep='\t')
         baselined.to_csv("./Temp/Result.csv")
         return(baselined.to_json())
@@ -172,16 +175,20 @@ def processor_TPP():
             
         heavy = process_PD.extract_heavy()
         light = process_PD.extract_light()
-        
+        timestr=time.strftime("%Y%m%d-%H%M%S")
+        os.mkdir("./Results/"+timestr+"/")
+        heavy.to_csv("./Results/"+timestr+"/Result_heavy_peptides.txt",sep='\t')
+        light.to_csv("./Results/"+timestr+"/Result_light_peptides.txt",sep='\t')
         stats_heavy = process_PD.statistics(heavy)
         stats_light = process_PD.statistics(light)
         
         
         
         light=process_PD.sum_peptides_for_proteins(light)
+        light.index.name= 'Accession'
         heavy=process_PD.sum_peptides_for_proteins(heavy)
-        timestr=time.strftime("%Y%m%d-%H%M%S")
-        os.mkdir("./Results/"+timestr+"/")
+        heavy.index.name= 'Accession'
+
         
         stats_light.to_csv("./Results/"+timestr+"/statistics_light.txt",sep='\t')
         stats_heavy.to_csv("./Results/"+timestr+"/statistics_heavy.txt",sep='\t')
@@ -219,11 +226,15 @@ def processor_TPP():
         light = process_MQ.extract_light()
         process_MQ.extract_heavy()
         heavy = process_MQ.input_file
-
-        light=process_MQ.sum_peptides_for_proteins(light)
-        heavy=process_MQ.sum_peptides_for_proteins(heavy)
         timestr=time.strftime("%Y%m%d-%H%M%S")
         os.mkdir("./Results/"+timestr+"/")
+        heavy.to_csv("./Results/"+timestr+"/Result_heavy_peptides.txt",sep='\t')
+        light.to_csv("./Results/"+timestr+"/Result_light_peptides.txt",sep='\t')
+        light=process_MQ.sum_peptides_for_proteins(light)
+        light.index.name= 'Accession'
+        heavy=process_MQ.sum_peptides_for_proteins(heavy)
+        heavy.index.name= 'Accession'
+
 
         heavy.to_csv("./Results/"+timestr+"/Result_heavy.txt",sep='\t')
         light.to_csv("./Results/"+timestr+"/Result_light.txt",sep='\t')
@@ -295,6 +306,7 @@ def return_results():
             }
             resp = Response()
             resp.set_data(json.dumps(data_as_json))
+            
             return resp
         except:
             data_as_json = {
@@ -306,8 +318,8 @@ def return_results():
             return resp
 
     elif ftype == 'pSILAC':
-        dataframe_light = pd.read_csv(folder+"/Light_Results.txt",sep='\t')
-        dataframe_heavy = pd.read_csv(folder+"/Heavy_Results.txt",sep='\t')
+        dataframe_light = pd.read_csv(folder+"/Result_light.txt",sep='\t')
+        dataframe_heavy = pd.read_csv(folder+"/Result_heavy.txt",sep='\t')
         try:
             stats_light = pd.read_csv(folder +"/statistics_light.txt",sep='\t')
             stats_heavy = pd.read_csv(folder +"/statistics_heavy.txt",sep='\t')
@@ -343,7 +355,7 @@ def get_result_type():
     if 'processed_result.txt' in list_of_files:
         print('meprod')
         return json.dumps({'type':'mePROD'})
-    elif 'Heavy_result.txt' in list_of_files:
+    elif 'Result_heavy.txt' in list_of_files:
         print('pSILAC')
         return json.dumps({'type':'pSILAC'})
         

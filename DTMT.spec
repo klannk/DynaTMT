@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['DTMT.py'],
-             pathex=['C:\\Users\\Kevin\\Documents\\GitHub\\DynaTMT01'],
+             pathex=['c:\\Users\\Kevin\\Documents\\GitHub\\DynaTMT01'],
              binaries=[],
              datas=[],
              hiddenimports=[],

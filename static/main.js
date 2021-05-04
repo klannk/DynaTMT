@@ -103,10 +103,7 @@ function bindEventHandlerForMain_TPP() {
             resbutt.disabled = false;
             gobutt.innerText = "GO";
             let returned_data = JSON.parse(d1);
-            stats_light = JSON.parse(returned_data["light"]);
-            stats_heavy = JSON.parse(returned_data["heavy"]);
-            console.log(stats_heavy);
-            console.log(stats_light);
+            
           },
           error: function (xhr, status, error) {
             alert(xhr.responseText);
@@ -125,7 +122,7 @@ function boxplots(data, length) {
   let channels = data.columns;
   for (var i = 1; i < length; i++) {
     channel_name = channels[i];
-
+    
     y0 = data.iloc({ columns: [String(i)] }).values.flat();
     var trace = {
       y: y0,
@@ -148,7 +145,8 @@ async function parse_data(data) {
   let df = await dfd.read_csv("/api/get_latest");
   const channels_length = df.columns.length;
   data1 = boxplots(df, channels_length);
-  var layout = {
+  var layout = {paper_bgcolor:'rgba(0,0,0,0)',
+    plot_bgcolor:'rgba(0,0,0,0)',
     colorway: [
       "#f3cec9",
       "#e7a4b6",
@@ -175,7 +173,8 @@ async function parse_data_TPP_light(data) {
   let df = await dfd.read_csv("/api/get_latest_TPP_light");
   const channels_length = df.columns.length;
   data1 = boxplots(df, channels_length);
-  var layout = {
+  var layout = {paper_bgcolor:'rgba(0,0,0,0)',
+    plot_bgcolor:'rgba(0,0,0,0)',
     colorway: [
       "#f3cec9",
       "#e7a4b6",
@@ -284,7 +283,8 @@ function get_result(cb) {
 
           console.log(return_data);
           cb(return_data, dtype)
-        } else if (dtype == "pSILAC") {
+        } 
+        else if (dtype == "pSILAC") {
           console.log(return_data);
           cb(return_data, dtype)
           //Parse as pSILAC
@@ -344,7 +344,7 @@ function plotImpl(df, dtype){
       statistics_light.set_index({key:df['stats_index'], inplace:true});
       
       let charge_trace_l = [{
-        x:[String(df['stats_columns'][5])],
+        x:['Charge'],
         y:statistics_light.loc({rows:['mean'], columns:['Charge']}).values.flat(),
         
         error_y:{
@@ -365,7 +365,7 @@ function plotImpl(df, dtype){
       }]
 
       let charge_trace_h = [{
-        x:[String(df['stats_columns'][5])],
+        x:['Charge'],
         y:statistics_heavy.loc({rows:['mean'], columns:['Charge']}).values.flat(),
         
         error_y:{
@@ -392,7 +392,7 @@ function plotImpl(df, dtype){
       Plotly.newPlot(hcharge,charge_trace_h,layout_bar)
 
       let mz_trace_l = [{
-        x:[String(df['stats_columns'][10])],
+        x:['m/z [Da]'],
         y:statistics_light.loc({rows:['mean'], columns:['m/z [Da]']}).values.flat(),
         
         error_y:{
@@ -413,7 +413,7 @@ function plotImpl(df, dtype){
       }]
 
       let mz_trace_h = [{
-        x:[String(df['stats_columns'][10])],
+        x:['m/z [Da]'],
         y:statistics_heavy.loc({rows:['mean'], columns:['m/z [Da]']}).values.flat(),
         
         error_y:{
@@ -438,7 +438,7 @@ function plotImpl(df, dtype){
       Plotly.newPlot(hmz,mz_trace_h,layout_bar)
 
       let dmz_trace_l = [{
-        x:[String(df['stats_columns'][13])],
+        x:['DeltaM [ppm]'],
         y:statistics_light.loc({rows:['mean'], columns:['DeltaM [ppm]']}).values.flat(),
         
         error_y:{
@@ -459,7 +459,7 @@ function plotImpl(df, dtype){
       }]
 
       let dmz_trace_h = [{
-        x:[String(df['stats_columns'][13])],
+        x:['DeltaM [ppm]'],
         y:statistics_heavy.loc({rows:['mean'], columns:['DeltaM [ppm]']}).values.flat(),
         
         error_y:{
@@ -485,7 +485,7 @@ function plotImpl(df, dtype){
       Plotly.newPlot(dhmz,dmz_trace_h,layout_bar)
 
       let iso_trace_l = [{
-        x:[String(df['stats_columns'][15])],
+        x:['Isolation Interference [%]'],
         y:statistics_light.loc({rows:['mean'], columns:['Isolation Interference [%]']}).values.flat(),
         
         error_y:{
@@ -506,7 +506,7 @@ function plotImpl(df, dtype){
       }]
 
       let iso_trace_h = [{
-        x:[String(df['stats_columns'][15])],
+        x:['Isolation Interference [%]'],
         y:statistics_heavy.loc({rows:['mean'], columns:['Isolation Interference [%]']}).values.flat(),
         
         error_y:{
@@ -532,7 +532,7 @@ function plotImpl(df, dtype){
       Plotly.newPlot(hiso,iso_trace_h,layout_bar)
       
       let repo_trace_l = [{
-        x:[String(df['stats_columns'][16])],
+        x:['Average Reporter S/N'],
         y:statistics_light.loc({rows:['mean'], columns:['Average Reporter S/N']}).values.flat(),
         
         error_y:{
@@ -553,7 +553,7 @@ function plotImpl(df, dtype){
       }]
 
       let repo_trace_h = [{
-        x:[String(df['stats_columns'][16])],
+        x:['Average Reporter S/N'],
         y:statistics_heavy.loc({rows:['mean'], columns:['Average Reporter S/N']}).values.flat(),
         
         error_y:{
@@ -578,6 +578,290 @@ function plotImpl(df, dtype){
       let repoh = document.getElementById("repoh")
       Plotly.newPlot(repoh,repo_trace_h,layout_bar)
     }
+    else {console.log("NO STATS")}
+  }
+  else if (dtype == 'pSILAC'){
+    document.getElementById("abundances").style.display = "block"
+    document.getElementById("abundances_light").innerText = "Abundances Light"
+    document.getElementById("abundances_heavy").style.display = "block"
+       
+    let dataframe_light = new dfd.DataFrame(df['Data_Light']);
+    let dataframe_heavy = new dfd.DataFrame(df['Data_heavy']);
+    const Cont_01 = document.getElementById("plot_container_01");
+    const Cont_02 = document.getElementById("plot_container_heavy");
+
+    
+    const channels_length = dataframe_light.columns.length;
+    box_plot_data_l = boxplots(dataframe_light, channels_length);
+    box_plot_data_h = boxplots(dataframe_heavy, channels_length)
+    var layout_box = {
+      paper_bgcolor:'rgba(0,0,0,0)',
+      plot_bgcolor:'rgba(0,0,0,0)',
+      colorway: [
+        "#f3cec9",
+        "#e7a4b6",
+        "#cd7eaf",
+        "#a262a9",
+        "#6f4d96",
+        "#3d3b72",
+        "#182844",
+      ],
+      yaxis: {
+        type: "log",
+      },
+    };
+    Plotly.newPlot(Cont_01, box_plot_data_l, layout_box);
+    Plotly.newPlot(Cont_02, box_plot_data_h, layout_box);
+    //Plot stats//
+    if (df['stats'] == 'yes'){
+      document.getElementById("statistics").style.display = "block"
+      
+      let statistics_light = new dfd.DataFrame(df['stats_light']);
+      
+      let statistics_heavy = new dfd.DataFrame(df['stats_heavy']);
+      
+      statistics_light.columns = df['stats_columns'];
+      statistics_heavy.columns = df['stats_columns'];
+      
+      console.log(statistics_light.columns);
+      statistics_heavy.set_index({key:df['stats_index'], inplace:true});
+      statistics_light.set_index({key:df['stats_index'], inplace:true});
+      
+      let charge_trace_l = [{
+        x:['Charge'],
+        y:statistics_light.loc({rows:['mean'], columns:['Charge']}).values.flat(),
+        
+        error_y:{
+          type:'data',
+          array:statistics_light.loc({rows:['std'], columns:['Charge']}).values.flat(),
+          visible:true
+          
+        },
+        type:'bar',
+        marker: {
+          color: '#6f4d96',
+          opacity: 0.6,
+          line: {
+            color:"#182844",
+            width: 3
+          } 
+        }  
+      }]
+
+      let charge_trace_h = [{
+        x:['Charge'],
+        y:statistics_heavy.loc({rows:['mean'], columns:['Charge']}).values.flat(),
+        
+        error_y:{
+          type:'data',
+          array:statistics_heavy.loc({rows:['std'], columns:['Charge']}).values.flat(),
+          visible:true
+          
+        },
+        type:'bar',
+        marker: {
+          color: '#6f4d96',
+          opacity: 0.6,
+          line: {
+            color:"#182844",
+            width: 3
+          } 
+        }  
+      }]
+      let layout_bar ={paper_bgcolor:'rgba(0,0,0,0)',
+      plot_bgcolor:'rgba(0,0,0,0)',xaxis:{showticklables:false,ticks: ''}}
+      let lcharge = document.getElementById("lcharge")
+      Plotly.newPlot(lcharge,charge_trace_l,layout_bar)
+      let hcharge = document.getElementById("hcharge")
+      Plotly.newPlot(hcharge,charge_trace_h,layout_bar)
+
+      let mz_trace_l = [{
+        x:['m/z [Da]'],
+        y:statistics_light.loc({rows:['mean'], columns:['m/z [Da]']}).values.flat(),
+        
+        error_y:{
+          type:'data',
+          array:statistics_light.loc({rows:['std'], columns:['m/z [Da]']}).values.flat(),
+          visible:true
+          
+        },
+        type:'bar',
+        marker: {
+          color: '#6f4d96',
+          opacity: 0.6,
+          line: {
+            color:"#182844",
+            width: 3
+          } 
+        }  
+      }]
+
+      let mz_trace_h = [{
+        x:['m/z [Da]'],
+        y:statistics_heavy.loc({rows:['mean'], columns:['m/z [Da]']}).values.flat(),
+        
+        error_y:{
+          type:'data',
+          array:statistics_heavy.loc({rows:['std'], columns:['m/z [Da]']}).values.flat(),
+          visible:true
+          
+        },
+        type:'bar',
+        marker: {
+          color: '#6f4d96',
+          opacity: 0.6,
+          line: {
+            color:"#182844",
+            width: 3
+          } 
+        }  
+      }]
+      let lmz = document.getElementById("lmz")
+      Plotly.newPlot(lmz,mz_trace_l,layout_bar)
+      let hmz = document.getElementById("hmz")
+      Plotly.newPlot(hmz,mz_trace_h,layout_bar)
+
+      let dmz_trace_l = [{
+        x:['DeltaM [ppm]'],
+        y:statistics_light.loc({rows:['mean'], columns:['DeltaM [ppm]']}).values.flat(),
+        
+        error_y:{
+          type:'data',
+          array:statistics_light.loc({rows:['std'], columns:['DeltaM [ppm]']}).values.flat(),
+          visible:true
+          
+        },
+        type:'bar',
+        marker: {
+          color: '#6f4d96',
+          opacity: 0.6,
+          line: {
+            color:"#182844",
+            width: 3
+          } 
+        }  
+      }]
+
+      let dmz_trace_h = [{
+        x:['DeltaM [ppm]'],
+        y:statistics_heavy.loc({rows:['mean'], columns:['DeltaM [ppm]']}).values.flat(),
+        
+        error_y:{
+          type:'data',
+          array:statistics_heavy.loc({rows:['std'], columns:['DeltaM [ppm]']}).values.flat(),
+          visible:true
+          
+        },
+        type:'bar',
+        marker: {
+          color: '#6f4d96',
+          opacity: 0.6,
+          line: {
+            color:"#182844",
+            width: 3
+          } 
+        }  
+      }]
+      
+      let dlmz = document.getElementById("lmzd")
+      Plotly.newPlot(dlmz,dmz_trace_l,layout_bar)
+      let dhmz = document.getElementById("hmzd")
+      Plotly.newPlot(dhmz,dmz_trace_h,layout_bar)
+
+      let iso_trace_l = [{
+        x:['Isolation Interference [%]'],
+        y:statistics_light.loc({rows:['mean'], columns:['Isolation Interference [%]']}).values.flat(),
+        
+        error_y:{
+          type:'data',
+          array:statistics_light.loc({rows:['std'], columns:['Isolation Interference [%]']}).values.flat(),
+          visible:true
+          
+        },
+        type:'bar',
+        marker: {
+          color: '#6f4d96',
+          opacity: 0.6,
+          line: {
+            color:"#182844",
+            width: 3
+          } 
+        }  
+      }]
+
+      let iso_trace_h = [{
+        x:['Isolation Interference [%]'],
+        y:statistics_heavy.loc({rows:['mean'], columns:['Isolation Interference [%]']}).values.flat(),
+        
+        error_y:{
+          type:'data',
+          array:statistics_heavy.loc({rows:['std'], columns:['Isolation Interference [%]']}).values.flat(),
+          visible:true
+          
+        },
+        type:'bar',
+        marker: {
+          color: '#6f4d96',
+          opacity: 0.6,
+          line: {
+            color:"#182844",
+            width: 3
+          } 
+        }  
+      }]
+     
+      let isol = document.getElementById("iso_l")
+      Plotly.newPlot(isol,iso_trace_l,layout_bar)
+      let hiso = document.getElementById("iso_h")
+      Plotly.newPlot(hiso,iso_trace_h,layout_bar)
+      
+      let repo_trace_l = [{
+        x:['Average Reporter S/N'],
+        y:statistics_light.loc({rows:['mean'], columns:['Average Reporter S/N']}).values.flat(),
+        
+        error_y:{
+          type:'data',
+          array:statistics_light.loc({rows:['std'], columns:['Average Reporter S/N']}).values.flat(),
+          visible:true
+          
+        },
+        type:'bar',
+        marker: {
+          color: '#6f4d96',
+          opacity: 0.6,
+          line: {
+            color:"#182844",
+            width: 3
+          } 
+        }  
+      }]
+
+      let repo_trace_h = [{
+        x:['Average Reporter S/N'],
+        y:statistics_heavy.loc({rows:['mean'], columns:['Average Reporter S/N']}).values.flat(),
+        
+        error_y:{
+          type:'data',
+          array:statistics_heavy.loc({rows:['std'], columns:['Average Reporter S/N']}).values.flat(),
+          visible:true
+          
+        },
+        type:'bar',
+        marker: {
+          color: '#6f4d96',
+          opacity: 0.6,
+          line: {
+            color:"#182844",
+            width: 3
+          } 
+        }  
+      }]
+     
+      let repol = document.getElementById("repol")
+      Plotly.newPlot(repol,repo_trace_l,layout_bar)
+      let repoh = document.getElementById("repoh")
+      Plotly.newPlot(repoh,repo_trace_h,layout_bar)
+  }
   }
 }
 
