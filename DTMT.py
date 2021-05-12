@@ -1,3 +1,20 @@
+'''
+    DynaTMT - a desktop application to process SILAC/TMT proteomics data
+    Copyright (C) 2021  Kevin Klann
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+'''
 from flask import Flask, request, redirect, render_template,session, Response
 from DynaTMT.DynaTMT import PD_input,plain_text_input
 import json
@@ -97,7 +114,7 @@ def processor():
         os.mkdir("./Results/"+timestr+"/")
         baselined.to_csv("./Results/"+timestr+"/processed_result_peptides.txt",sep='\t')
         
-        baselined = process_PD.sum_peptides_for_proteins(baselined)
+        baselined = process_PD.protein_rollup(baselined,method='sum')
         baselined.to_csv("./Results/"+timestr+"/processed_result.txt",sep='\t')
         stats_light.to_csv("./Results/"+timestr+"/statistics_light.txt",sep='\t')
         stats_heavy.to_csv("./Results/"+timestr+"/statistics_heavy.txt",sep='\t')
@@ -131,7 +148,7 @@ def processor():
         timestr=time.strftime("%Y%m%d-%H%M%S")
         os.mkdir("./Results/"+timestr+"/")
         baselined.to_csv("./Results/"+timestr+"/processed_result_peptides.txt",sep='\t')
-        baselined = process_MQ.sum_peptides_for_proteins(baselined)
+        baselined = process_MQ.protein_rollup(baselined,method='sum')
         baselined.to_csv("./Results/"+timestr+"/processed_result.txt",sep='\t')
         baselined.to_csv("./Temp/Result.csv")
         return(baselined.to_json())
@@ -184,9 +201,9 @@ def processor_TPP():
         
         
         
-        light=process_PD.sum_peptides_for_proteins(light)
+        light=process_PD.protein_rollup(light,method='sum')
         light.index.name= 'Accession'
-        heavy=process_PD.sum_peptides_for_proteins(heavy)
+        heavy=process_PD.protein_rollup(heavy,method='sum')
         heavy.index.name= 'Accession'
 
         
@@ -230,9 +247,9 @@ def processor_TPP():
         os.mkdir("./Results/"+timestr+"/")
         heavy.to_csv("./Results/"+timestr+"/Result_heavy_peptides.txt",sep='\t')
         light.to_csv("./Results/"+timestr+"/Result_light_peptides.txt",sep='\t')
-        light=process_MQ.sum_peptides_for_proteins(light)
+        light=process_MQ.protein_rollup(light,method='sum')
         light.index.name= 'Accession'
-        heavy=process_MQ.sum_peptides_for_proteins(heavy)
+        heavy=process_MQ.protein_rollup(heavy,method='sum')
         heavy.index.name= 'Accession'
 
 
