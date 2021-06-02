@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#563d7c">
+    <title>DynaTMT-v1.0.0</title>
+
+    
+
+<!-- CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+<!-- jQuery and JS bundle w/ Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/danfojs@0.1.2/dist/index.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+<script src="{{ url_for('static', filename='plotly-latest.min.js') }}"></script>
+
+  </head>
+
+  <body class="bg-light">
+    {% include "partials/menu.jinja" %}
+    <div class='jumbotron'>
+      <div class="container mt-5">
+        <h1 class="display-3">DynaTMT - v1.0.0</h1>
+        <p align="justify" class="lead">This tool analyzes (p)SILAC data combined with Tandem Mass Tag (TMT)
+        labelling, such as <a href="https://doi.org/10.1016/j.molcel.2019.11.010">mePROD</a> or <a href="https://stke.sciencemag.org/content/5/217/rs2">Hyperplexing</a>. It 
+        is suitable to analyze any combination of SILAC with TMT. The tool will normalize the data
+        based on all peptides and then either perform the mePROD workflow, where a baseline is used to
+        estimate the co-isolation for high-sensitivity protein translation (only heavy peptides will be reported), or it will
+        extract quantifications for light and heavy separately and writes them to output files.
+
+        In the "Show Results" area the data is visualized for first impressions.
+          <br> The supported input types are: ProteomeDiscoverer output text files (tab delimited) or plain text files (please refer to <a href="/help">documentation</a>)
+        </p>
+      </div>
+    </div>
+    
+    
+    {% block content %}
+    {% endblock %}
+    
+    <hr>
+    <footer class="container">
+      <p>K.Klann, D. Krause & C. Münch, <a href="https://biochem2.com/">Institute for Biochemistry II</a>, Goethe University Frankfurt am Main, Medical School</p>
+    </footer>
+  </body>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+   <script type="text/javascript"
+         src="{{ url_for('static', filename='main.js') }}"></script>
+  
+</html>

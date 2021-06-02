@@ -1,0 +1,21 @@
+{% extends "base.jinja" %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mt-5 text-center">Light abdundances after processing</h2>
+    <div id="Light">
+    </div>
+    <h2 class="mt-5 text-center">Heavy abdundances after processing</h2>
+    <div id="Heavy">
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        parse_data_TPP_light();
+        parse_data_TPP_heavy();
+    })
+
+</script>
+
+{% endblock %}
