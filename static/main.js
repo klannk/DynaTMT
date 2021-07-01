@@ -1,5 +1,6 @@
 let original_data;
 
+
 function bindEventHandlerForMain() {
   /* This function binds events to the GO Button in the Params.jinja HTML file. It first sends a request submitting the analysis parameters to the python server,
   upon success it POSTs the file to the python server, that then gets processed.*/
