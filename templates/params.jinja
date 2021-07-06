@@ -43,4 +43,17 @@
       <button class="btn btn-primary btn-lg btn-block" id='go-button'>GO</button>
       <a href="/api/results"><button class="btn-lg btn-block" id='result',>Show Result</button></a>
     </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', (event) => {
+        console.log("Foo");
+        bindEventHandlerForMain();
+        $('#input_file').on('change',function(){
+                //get the file name
+                var fileName = $(this).val();
+                //replace the "Choose a file" label
+                $(this).next('.custom-file-label').html(fileName);
+            })
+      })
+    </script>
 {% endblock %}
