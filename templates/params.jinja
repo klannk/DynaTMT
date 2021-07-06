@@ -43,20 +43,4 @@
       <button class="btn btn-primary btn-lg btn-block" id='go-button'>GO</button>
       <a href="/api/results"><button class="btn-lg btn-block" id='result',>Show Result</button></a>
     </div>
-
-    <script>
-      document.addEventListener('DOMContentLoaded', (event) => {
-        
-        const input_file_box = document.getElementById("input_file");
-        const input_file_label = document.getElementsByClassName("custom-file-label")[0]
-        
-        input_file_box.addEventListener('change',function(){
-          
-          var string_file = this.value;
-          
-          input_file_label.innerHTML = string_file;
-        });
-        bindEventHandlerForMain();
-      })
-    </script>
 {% endblock %}

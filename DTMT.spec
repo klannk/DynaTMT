@@ -1,10 +1,11 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+
 block_cipher = None
 
 
 a = Analysis(['DTMT.py'],
-             pathex=['c:\\Users\\Kevin\\Documents\\GitHub\\DynaTMT01'],
+             pathex=['C:\\Users\\kevin\\Documents\\GitHub\\DynaTMT'],
              binaries=[],
              datas=[],
              hiddenimports=[],

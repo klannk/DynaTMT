@@ -1,5 +1,18 @@
 let original_data;
 
+document.addEventListener('DOMContentLoaded', (event) => {
+        
+  const input_file_box = document.getElementById("input_file");
+  const input_file_label = document.getElementsByClassName("custom-file-label")[0]
+  
+  input_file_box.addEventListener('change',function(){
+    
+    var string_file = this.value;
+    
+    input_file_label.innerHTML = string_file;
+  });
+  bindEventHandlerForMain();
+})
 
 function bindEventHandlerForMain() {
   /* This function binds events to the GO Button in the Params.jinja HTML file. It first sends a request submitting the analysis parameters to the python server,
